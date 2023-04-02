@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasarımlı Sayaç</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            height: 150px;
+            width: 150px;
+            background-color: #185AD8;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border-radius: 15px;
+            position: relative; 
+        }
+        .heading {
+            font-family: sans-serif;
+        }
+        .counter {
+            font-size: 2.5em;
+            font-family: sans-serif;
+        }
+        
+        button {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            background: white;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.2em;
+            color: rgb(34, 34, 34);
+            box-shadow: 0 0 10px rgb(51,51,51,0.158);
+            position: absolute; 
+
+        }
+        .decr {
+            bottom: -15%;
+            right: 10%;
+        }
+        .incr {
+            bottom: 15%;
+            right: -10%;
+        }
+
+        button:hover {
+            background-color:#afb1b6;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <p class="heading">Sayaç</p>
+        <p class="counter" id="counter">0</p>
+
+        <button id="increase" class="incr">+</button>
+        <button id="decrease" class="decr">-</button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
