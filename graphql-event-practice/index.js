@@ -1,14 +1,19 @@
 const data = require("./data.json")
 const { ApolloServer, gql } = require("apollo-server");
-
-const typeDefs = gql`
+(async () => {
+    const { nanoid } = await import('nanoid');
+    
+    const typeDefs = gql`
     type User {
         id: ID!
         username: String!
         email: String!
         events: [Event!]
     }
-
+    input createUserInput {
+        userName: String!
+        email: String!
+    }
     type Event {
         id: ID!
         title: String!
@@ -22,7 +27,6 @@ const typeDefs = gql`
         location: Location!
         participants: [Participant!]
     }
-
     type Location {
         id: ID!
         name: String!
@@ -36,7 +40,7 @@ const typeDefs = gql`
         event_id: ID!
         user: User!
         event: Event!
-        }
+    }
     type Query {
         # User
         users: [User!]!
@@ -50,6 +54,12 @@ const typeDefs = gql`
         # Participant
         participants: [Participant!]!
         participant(id: ID!): Participant!
+    }
+    type Mutation {
+        # User
+        addUser(data: createUserInput!): User! 
+        # Event
+        addEvent(title: String!, desc: String!, date: String!, from: String!, to: String!, location_id: ID!,user_id: ID!): Event!
     }
 `;
 
@@ -95,6 +105,34 @@ const resolvers = {
         event: (parent) => {
             return data.events.find((event) => parseInt(event.id) === parseInt(parent.event_id))
         }
+    },
+    Mutation: {
+        // USER MUTATİONS
+        addUser: (parent, { data: {userName, email} }) => {
+            const user = {
+                id: nanoid(),
+                username: userName,
+                email: email,
+                
+            };
+            data.users.push(user);
+            return user
+        },
+        // EVENT MUTATİONS
+        addEvent: (parent, {title, desc, date, from, to, location_id ,user_id}) => {
+            const event = {
+                id: nanoid(),
+                title: title,
+                desc: desc,
+                date: date,
+                from: from,
+                to: to,
+                location_id: location_id,
+                user_id: user_id
+            };
+            data.events.push(event);
+            return event
+        }
     }
 };
 const server = new ApolloServer({
@@ -104,3 +142,4 @@ const server = new ApolloServer({
 server.listen().then(({url}) => {
     console.log(`server is ready at ${url}`);
 });
+  })();
