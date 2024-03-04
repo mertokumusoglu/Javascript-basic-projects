@@ -1,4 +1,5 @@
-const data = require("./data.json")
+const { parse } = require("graphql");
+const database = require("./data.json")
 const { ApolloServer, gql } = require("apollo-server");
 (async () => {
     const { nanoid } = await import('nanoid');
@@ -13,6 +14,10 @@ const { ApolloServer, gql } = require("apollo-server");
     input createUserInput {
         userName: String!
         email: String!
+    }
+    input updateUserInput {
+        userName: String
+        email: String
     }
     type Event {
         id: ID!
@@ -57,7 +62,8 @@ const { ApolloServer, gql } = require("apollo-server");
     }
     type Mutation {
         # User
-        addUser(data: createUserInput!): User! 
+        addUser(data: createUserInput!): User!
+        updateUser(id: ID!,data: updateUserInput!): User!
         # Event
         addEvent(title: String!, desc: String!, date: String!, from: String!, to: String!, location_id: ID!,user_id: ID!): Event!
     }
@@ -65,45 +71,45 @@ const { ApolloServer, gql } = require("apollo-server");
 
 const resolvers = {
     Query: {
-        users: () => data.users,
+        users: () => database.users,
         user: (parent, args) => {
-            return data.users.find((user) => user.id === parseInt(args.id))
+            return database.users.find((user) => user.id === parseInt(args.id))
         },
-        events: () => data.events,
+        events: () => database.events,
         event: (parent, args) => {
-            return data.events.find((event) => event.id === parseInt(args.id))
+            return database.events.find((event) => event.id === parseInt(args.id))
         },
-        locations: () => data.locations,
+        locations: () => database.locations,
         location: (parent,args) => {
-            return data.locations.find((location) => parseInt(args.id) === parseInt(location.id))
+            return database.locations.find((location) => parseInt(args.id) === parseInt(location.id))
         },
-        participants: () => data.participants,
+        participants: () => database.participants,
         participant: (parent, args) => {
-            return data.participants.find((participant) => parseInt(args.id) === parseInt(participant.id))
+            return database.participants.find((participant) => parseInt(args.id) === parseInt(participant.id))
         }
     },
     User: {
         events: (parent) => {
-            return data.events.filter((event) => parseInt(parent.id) === parseInt(event.user_id))
+            return database.events.filter((event) => parseInt(parent.id) === parseInt(event.user_id))
         }
     },
     Event: {
         user: (parent) => {
-            return data.users.find((user) => parseInt(parent.user_id) === parseInt(user.id))
+            return database.users.find((user) => parseInt(parent.user_id) === parseInt(user.id))
         },
         location: (parent) => {
-            return data.locations.find((location) => parseInt(location.id) === parseInt(parent.location_id))
+            return database.locations.find((location) => parseInt(location.id) === parseInt(parent.location_id))
         },
         participants: (parent) => {
-            return data.participants.filter((participant) => parseInt(participant.event_id) === parseInt(parent.id))
+            return database.participants.filter((participant) => parseInt(participant.event_id) === parseInt(parent.id))
         }
     },
     Participant: {
         user: (parent) => {
-            return data.users.find((user) => parseInt(user.id) === parseInt(parent.user_id))
+            return database.users.find((user) => parseInt(user.id) === parseInt(parent.user_id))
         },
         event: (parent) => {
-            return data.events.find((event) => parseInt(event.id) === parseInt(parent.event_id))
+            return database.events.find((event) => parseInt(event.id) === parseInt(parent.event_id))
         }
     },
     Mutation: {
@@ -115,7 +121,26 @@ const resolvers = {
                 email: email,
                 
             };
-            data.users.push(user);
+            database.users.push(user);
+            return user
+        },
+        updateUser: (parent, {id, data}) => {
+            /* O(4n)
+            const userIndex = database.users.findIndex((user) => parseInt(id) === parseInt(user.id))
+            if(userIndex === -1) {
+                throw new Error("user is not found");
+            }
+            database.users[userIndex].username = data.userName;
+            database.users[userIndex].email = data.email
+            return database.users[userIndex]
+            */
+           // O(n)
+            const user = database.users.find((user) => parseInt(id) === parseInt(user.id))
+            if(user === -1 ) {
+                throw new Error("User not found");
+            }
+            user.username = data.userName
+            user.email = data.email
             return user
         },
         // EVENT MUTATİONS
@@ -130,7 +155,7 @@ const resolvers = {
                 location_id: location_id,
                 user_id: user_id
             };
-            data.events.push(event);
+            database.events.push(event);
             return event
         }
     }
