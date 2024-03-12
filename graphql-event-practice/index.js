@@ -1,5 +1,5 @@
 const { parse } = require("graphql");
-const database = require("./data.json")
+import database from "./data.json";
 const { ApolloServer, gql } = require("apollo-server");
 (async () => {
     const { nanoid } = await import('nanoid');
