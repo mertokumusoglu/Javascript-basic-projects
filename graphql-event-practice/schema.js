@@ -1,8 +1,9 @@
 import database from "./data.json" assert { type: "json"};
-import { createSchema, createPubSub } from 'graphql-yoga'
+import pubsub from "./pubsub.js"
+import { createSchema} from 'graphql-yoga'
 import {nanoid} from "nanoid";
 import { gql } from 'graphql-tag';
-const pubSub = createPubSub()
+
 
 export const schema = createSchema({
     typeDefs: gql`
@@ -129,6 +130,7 @@ export const schema = createSchema({
             userCreated: User!
             userUpdated: User!
             userDeleted: User!
+            userCount: Int!
             # Event Subscriptions
             eventCreated: Event!
             eventUpdated: Event!
@@ -147,54 +149,58 @@ export const schema = createSchema({
         Subscription: {
             // User subscriptions
             userCreated: {
-                subscribe: () => pubSub.subscribe('userCreated'),
+                subscribe: () => pubsub.subscribe('userCreated'),
                 resolve: payload => payload.userCreated
             },
             userUpdated: {
-                subscribe: () => pubSub.subscribe("userUpdated"),
+                subscribe: () => pubsub.subscribe("userUpdated"),
                 resolve: payload => payload.userUpdated
             },
             userDeleted: {
-                subscribe: () => pubSub.subscribe("userDeleted"),
+                subscribe: () => pubsub.subscribe("userDeleted"),
                 resolve: payload => payload.userDeleted
+            },
+            userCount: {
+                subscribe: () => pubsub.subscribe("userCount"),
+                resolve: payload => payload.userCount
             },
             // Event subscriptions
             eventCreated: {
-                subscribe: () => pubSub.subscribe('eventCreated'),
+                subscribe: () => pubsub.subscribe('eventCreated'),
                 resolve: payload => payload.eventCreated
             },
             eventUpdated: {
-                subscribe: () => pubSub.subscribe("eventUpdated"),
+                subscribe: () => pubsub.subscribe("eventUpdated"),
                 resolve: payload => payload.eventUpdated
             },
             eventDeleted: {
-                subscribe: () => pubSub.subscribe("eventDeleted"),
+                subscribe: () => pubsub.subscribe("eventDeleted"),
                 resolve: payload => payload.eventDeleted
             },
             // Location subscriptions
             locationCreated: {
-                subscribe: () => pubSub.subscribe('locationCreated'),
+                subscribe: () => pubsub.subscribe('locationCreated'),
                 resolve: payload => payload.locationCreated
             },
             locationUpdated: {
-                subscribe: () => pubSub.subscribe("locationUpdated"),
+                subscribe: () => pubsub.subscribe("locationUpdated"),
                 resolve: payload => payload.locationUpdated
             },
             locationDeleted: {
-                subscribe: () => pubSub.subscribe("locationDeleted"),
+                subscribe: () => pubsub.subscribe("locationDeleted"),
                 resolve: payload => payload.locationDeleted
             },
             // Participant subscription
             participantCreated: {
-                subscribe: () => pubSub.subscribe('participantCreated'),
+                subscribe: () => pubsub.subscribe('participantCreated'),
                 resolve: payload => payload.participantCreated
             },
             participantUpdated: {
-                subscribe: () => pubSub.subscribe("participantUpdated"),
+                subscribe: () => pubsub.subscribe("participantUpdated"),
                 resolve: payload => payload.participantUpdated
             },
             participantDeleted: {
-                subscribe: () => pubSub.subscribe("participantDeleted"),
+                subscribe: () => pubsub.subscribe("participantDeleted"),
                 resolve: payload => payload.participantDeleted
             },
         },
@@ -249,7 +255,8 @@ export const schema = createSchema({
                     email: email,
                 };
                 database.users.push(user);
-                pubSub.publish("userCreated", { userCreated : user })
+                pubsub.publish("userCreated", { userCreated : user })
+                pubsub.publish("userCount", { userCount: database.users.length })
                 return user
             },
             updateUser: (parent, { id, data }) => {
@@ -263,7 +270,7 @@ export const schema = createSchema({
                 if(data.email) {
                     user.email = data.email
                 }
-                pubSub.publish("userUpdated", { userUpdated : user })
+                pubsub.publish("userUpdated", { userUpdated : user })
                 return user
             },
             deleteUser: (parent, { id }) => {
@@ -273,7 +280,8 @@ export const schema = createSchema({
                 }
                 const deletedUser = database.users[userIndex]
                 database.users.splice(userIndex, 1)
-                pubSub.publish("userDeleted", { userDeleted : deletedUser })
+                pubsub.publish("userDeleted", { userDeleted : deletedUser })
+                
                 return deletedUser
 
             },
@@ -298,7 +306,7 @@ export const schema = createSchema({
                     user_id: user_id
                 };
                 database.events.push(event);
-                pubSub.publish("eventCreated", { eventCreated : event })
+                pubsub.publish("eventCreated", { eventCreated : event })
                 return event
             },
             updateEvent: (parent, { id, data }) => {
@@ -313,7 +321,7 @@ export const schema = createSchema({
                 selectedEvent.to = data.to
                 selectedEvent.location_id = data.location_id
                 selectedEvent.user_id = data.user_id
-                pubSub.publish("eventUpdated", { eventUpdated : selectedEvent })
+                pubsub.publish("eventUpdated", { eventUpdated : selectedEvent })
                 return selectedEvent
             },
             deleteEvent: (parent, { id }) => {
@@ -323,7 +331,7 @@ export const schema = createSchema({
                 }
                 const deletedEvent = database.events[eventIndex]
                 database.events.splice(eventIndex, 1)
-                pubSub.publish("eventDeleted", { eventDeleted : deletedEvent })
+                pubsub.publish("eventDeleted", { eventDeleted : deletedEvent })
                 return deletedEvent
             },
             deleteAllEvents: () => {
@@ -343,7 +351,7 @@ export const schema = createSchema({
                     lng: data.lng
                 }
                 database.locations.push(location)
-                pubSub.publish("locationCreated", { locationCreated : location })
+                pubsub.publish("locationCreated", { locationCreated : location })
                 return location
             },
             updateLocation: (parent, { id, data }) => {
@@ -355,7 +363,7 @@ export const schema = createSchema({
                 selectedLocation.desc = data.desc
                 selectedLocation.lat = data.lat
                 selectedLocation.lng = data.lng
-                pubSub.publish("locationUpdated", { locationUpdated : selectedLocation })
+                pubsub.publish("locationUpdated", { locationUpdated : selectedLocation })
                 return selectedLocation;
             },
             deleteLocation: (parent, { id }) => {
@@ -365,7 +373,7 @@ export const schema = createSchema({
                 }
                 const deletedLocation = database.locations[locationIndex]
                 database.locations.splice(locationIndex, 1)
-                pubSub.publish("locationDeleted", { locationDeleted : deletedLocation })
+                pubsub.publish("locationDeleted", { locationDeleted : deletedLocation })
                 return deletedLocation
             },
             deleteAllLocations: () => {
@@ -383,7 +391,7 @@ export const schema = createSchema({
                     event_id: data.event_id
                 }
                 database.participants.push(participant)
-                pubSub.publish("participantCreated", { participantCreated : participant })
+                pubsub.publish("participantCreated", { participantCreated : participant })
                 return participant
             },
             updateParticipant: (parent, { id, data }) => {
@@ -393,7 +401,7 @@ export const schema = createSchema({
                 }
                 updatedParticipant.user_id = data.user_id
                 updatedParticipant.event_id = data.event_id
-                pubSub.publish("participantUpdated", { participantUpdated : updatedParticipant })
+                pubsub.publish("participantUpdated", { participantUpdated : updatedParticipant })
                 return updatedParticipant
             },
             deleteParticipant: (parent, { id, data }) => {
@@ -403,7 +411,7 @@ export const schema = createSchema({
                 }
                 const deletedParticipant = database.participants[participantIndex]
                 database.participants.splice(participantIndex, 1)
-                pubSub.publish("participantDeleted", { participantDeleted : deletedParticipant })
+                pubsub.publish("participantDeleted", { participantDeleted : deletedParticipant })
                 return deletedParticipant
             },
             deleteAllParticipants: () => {
@@ -416,7 +424,7 @@ export const schema = createSchema({
         }
     },
     context: {
-        pubSub
+        pubsub
     },
 })
     
