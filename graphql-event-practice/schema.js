@@ -149,58 +149,58 @@ export const schema = createSchema({
         Subscription: {
             // User subscriptions
             userCreated: {
-                subscribe: () => pubsub.subscribe('userCreated'),
+                subscribe: () => pubsub.asyncIterator('userCreated'),
                 resolve: payload => payload.userCreated
             },
             userUpdated: {
-                subscribe: () => pubsub.subscribe("userUpdated"),
+                subscribe: () => pubsub.asyncIterator("userUpdated"),
                 resolve: payload => payload.userUpdated
             },
             userDeleted: {
-                subscribe: () => pubsub.subscribe("userDeleted"),
+                subscribe: () => pubsub.asyncIterator("userDeleted"),
                 resolve: payload => payload.userDeleted
             },
             userCount: {
-                subscribe: () => pubsub.subscribe("userCount"),
+                subscribe: () => pubsub.asyncIterator("userCount"),
                 resolve: payload => payload.userCount
             },
             // Event subscriptions
             eventCreated: {
-                subscribe: () => pubsub.subscribe('eventCreated'),
+                subscribe: () => pubsub.asyncIterator('eventCreated'),
                 resolve: payload => payload.eventCreated
             },
             eventUpdated: {
-                subscribe: () => pubsub.subscribe("eventUpdated"),
+                subscribe: () => pubsub.asyncIterator("eventUpdated"),
                 resolve: payload => payload.eventUpdated
             },
             eventDeleted: {
-                subscribe: () => pubsub.subscribe("eventDeleted"),
+                subscribe: () => pubsub.asyncIterator("eventDeleted"),
                 resolve: payload => payload.eventDeleted
             },
             // Location subscriptions
             locationCreated: {
-                subscribe: () => pubsub.subscribe('locationCreated'),
+                subscribe: () => pubsub.asyncIterator('locationCreated'),
                 resolve: payload => payload.locationCreated
             },
             locationUpdated: {
-                subscribe: () => pubsub.subscribe("locationUpdated"),
+                subscribe: () => pubsub.asyncIterator("locationUpdated"),
                 resolve: payload => payload.locationUpdated
             },
             locationDeleted: {
-                subscribe: () => pubsub.subscribe("locationDeleted"),
+                subscribe: () => pubsub.asyncIterator("locationDeleted"),
                 resolve: payload => payload.locationDeleted
             },
             // Participant subscription
             participantCreated: {
-                subscribe: () => pubsub.subscribe('participantCreated'),
+                subscribe: () => pubsub.asyncIterator('participantCreated'),
                 resolve: payload => payload.participantCreated
             },
             participantUpdated: {
-                subscribe: () => pubsub.subscribe("participantUpdated"),
+                subscribe: () => pubsub.asyncIterator("participantUpdated"),
                 resolve: payload => payload.participantUpdated
             },
             participantDeleted: {
-                subscribe: () => pubsub.subscribe("participantDeleted"),
+                subscribe: () => pubsub.asyncIterator("participantDeleted"),
                 resolve: payload => payload.participantDeleted
             },
         },
