@@ -1,0 +1,42 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Poker night",
+      "desc": "The dynamic kitten reveals itself as a self-confident horse to those who look! Draped neatly on a hanger, the literature would have us believe that a succinct dolphin is not but a raspberry! They were lost without the modern currant that composed their lion. A cherry of the snake is assumed to be a courteous orange. By the wayone cannot separate kiwis from bright monkeys! Authors often misinterpret the squirrel as a bright melon, when in actuality it feels more like a kind dog!",
+      "date": "2019-09-12",
+      "from": "11:00",
+      "to": "12:00",
+      "location_id": 1,
+      "user_id": 1
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "Strawberry6",
+      "email": "strawberry6@gmail.com"
+    },
+    {
+      "id": 2,
+      "username": "Apple3",
+      "email": "apple3@gmail.com"
+    }
+  ],
+  "participants": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "event_id": 1
+    }
+  ],
+  "locations": [
+    {
+      "id": 1,
+      "name": "Lake Casandra",
+      "desc": "The glorious nectarine comes from a sensitive alligator. An apple is the sheep of a seal! A kumquat is a bee's kitten? Few can name an amusing spider that isn't a dynamic duck. In ancient times their crocodile was, in this moment, an elated elephant? Those hamsters are nothing more than pomegranates.",
+      "lat": -67.6213,
+      "lng": -40.0738
+    }
+  ]
+}
