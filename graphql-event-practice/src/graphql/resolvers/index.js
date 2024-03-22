@@ -6,11 +6,11 @@ import  Subscription  from "./Subscription.js"
 import  Mutation from "./Mutation.js"
 
 const resolvers = {
-    Query,
-    Event,
     User,
+    Event,
     Participant,
-    Subscription,
+    Query,
     Mutation,
+    Subscription,
 }
 export default resolvers;

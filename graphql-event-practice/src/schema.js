@@ -1,7 +1,4 @@
-
-//schema.js
 import pubsub from "./pubsub.js"
-import db from "./data.json" assert {type: "json"}; 
 import { createSchema} from 'graphql-yoga'
 import { gql } from 'graphql-tag';
 import resolvers from "./graphql/resolvers/index.js"
@@ -147,9 +144,5 @@ export const schema = createSchema({
         }
     `,
     resolvers,
-    context: {
-        pubsub,
-        db,
-    }
 })
     

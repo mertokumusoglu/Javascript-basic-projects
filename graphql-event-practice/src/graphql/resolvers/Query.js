@@ -1,5 +1,3 @@
-
-//Query.js
 const Query = {
     users: (_,__, { db }) => db.users,
     user: (parent, args, {db}) => {

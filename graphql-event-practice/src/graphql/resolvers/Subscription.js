@@ -1,3 +1,4 @@
+import pubsub from "../../pubsub.js";
 const Subscription = {
     // User subscriptions
     userCreated: {
